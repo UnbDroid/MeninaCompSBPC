@@ -1,0 +1,143 @@
+#!/usr/bin/env python3
+from ev3dev2.motor import *
+from ev3dev2.sensor import *
+from ev3dev2.sensor.lego import *
+from ev3dev.ev3 import *
+from ev3dev2.sound import Sound
+
+tank_drive = MoveTank(OUTPUT_D, OUTPUT_A)
+coloresquerdo = ColorSensor(INPUT_1)
+colordireito = ColorSensor(INPUT_4)
+te = TouchSensor(INPUT_2)
+td = TouchSensor(INPUT_3)
+
+state = "segue_linha"
+
+#CECILIA
+#respostas = ["LEFT", "RIGHT", "LEFT"]
+
+#MARIA
+#respostas = ["RIGHT", "LEFT", "LEFT"]
+
+#ANNIE
+respostas = ["RIGHT","LEFT", "RIGHT"]
+
+#MAY-BRITT
+#respostas = ["RIGHT", "RIGHT", "LEFT"]
+
+#NETTIE
+#respostas = ["RIGHT", "LEFT", "RIGHT"]
+
+pos = 0
+chances = 2
+
+def segue_linha(e, d):
+    global state
+    global tank_drive
+
+    if (d <= 22 and e <= 22):
+        tank_drive.on(SpeedPercent(0), SpeedPercent(0))
+        print("Parar esq:", e)
+        print("Parar dir:", d)
+        state = "beep"
+    else:
+        if e < 22:
+            tank_drive.on(SpeedPercent(30), SpeedPercent(0))
+        elif d < 22:
+            tank_drive.on(SpeedPercent(0), SpeedPercent(30))
+        else:
+            tank_drive.on(SpeedPercent(20), SpeedPercent(20))
+
+def espera_botao():
+    global te
+    global td
+
+    while(True):
+        if te.is_pressed:
+            return "LEFT"
+        elif td.is_pressed:
+            return "RIGHT"
+
+def resposta(dir):
+    global respostas
+    global pos
+
+    if dir == respostas[pos]:
+        Sound().beep()
+    else:
+        Sound().tone([(30, 1500, 1000)])
+        dir = negado(dir)
+
+    pos = pos + 1
+    return dir
+
+def negado(dir):
+    global chances 
+    chances -= 1
+
+    if chances <= 0:
+        Sound().tone([(30, 1500, 2000)])
+        exit()
+
+    if (dir == "RIGHT"):
+        dir = "LEFT"
+    else:
+        dir = "RIGHT"
+
+    return dir
+
+def vira_90(dir, e, d):
+    global state
+
+    if(dir == "RIGHT"):
+        tank_drive.on(SpeedPercent(0), SpeedPercent(30))
+        if(d > 22):
+            print("virada direita:", d)
+            state = "segue_linha"
+    else:
+        tank_drive.on(SpeedPercent(30), SpeedPercent(0))
+        if(e > 22):
+            print("virada esquerda: ", e)
+            state = "segue_linha"
+
+def main():
+    global state
+    global chances
+    dir = "-"
+
+    while(True):
+        e = coloresquerdo.value()
+        d = colordireito.value()
+
+        if state == "segue_linha":
+            segue_linha(e, d)
+        elif state == "beep":
+            Sound().beep()
+            state = "espera_botao"
+        elif state == "espera_botao":
+            dir = espera_botao()
+            state = "check_resposta"
+        elif state == "check_resposta":
+            dir = resposta(dir)
+            state = "curva"
+        elif state == "curva":
+            vira_90(dir, e, d)
+
+if __name__ == '__main__':
+    main()
+
+#while True:
+
+    #if te.is_pressed:
+    #	tank_drive.on(SpeedPercent(40), SpeedPercent(0))
+    #	tank_drive.on(SpeedPercent(0), SpeedPercent(0))
+    #elif td.is_pressed:
+    #	tank_drive.on(SpeedPercent(0), SpeedPercent(40))
+    #	tank_drive.on(SpeedPercent(0), SpeedPercent(0))
+    #else:
+    #	1
+
+#Valores do sensor de cor esquerdo = Branco (71/70/69,73) // Preto (4/6/7) // vermelho fosco (50/51)
+#Valores do sensor de cor direito =  Branco(81/82) // Preto(8/7) // vermelho fosco (59/58)
+#branco > 65
+#preto < 10
