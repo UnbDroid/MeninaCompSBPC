@@ -14,6 +14,7 @@ A) Ada Lovelace*
 B) Grace Hopper
 
 *Banco de perguntas externas:*
+
 4 -Qual o nome da cientista responsável pela comprovação da existência de matéria escura no universo?
 Katie Bouman
 Vera Rubin*
