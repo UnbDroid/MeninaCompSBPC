@@ -1,5 +1,5 @@
 # MeninaCompSBPC
-> Perguntas seguindo o código que tem > Respostas (DIR (A)/ ESQ (B) /DIR(A));
+*Perguntas seguindo o código que tem > Respostas (DIR (A)/ ESQ (B) /DIR(A))*
 
 PERGUNTA 1 - Qual o nome da cientista responsável pelo algoritmo que resultou na primeira foto de um buraco negro? 
 A) Katie Bouman*
@@ -13,7 +13,7 @@ PERGUNTA 3 - Qual o nome da primeira programadora de computadores?
 A) Ada Lovelace*
 B) Grace Hopper
 
-> Banco de perguntas externas:
+*Banco de perguntas externas:*
 4 -Qual o nome da cientista responsável pela comprovação da existência de matéria escura no universo?
 Katie Bouman
 Vera Rubin*
